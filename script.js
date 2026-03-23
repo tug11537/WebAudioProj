@@ -32,7 +32,7 @@ filter.chain(reverb, gain, Tone.Destination);
 // LFO into filter frequency
 lfo.connect(filter.frequency);
 
-// ---------- UI helpers ----------
+// ---------- UI ----------
 const $ = (id) => document.getElementById(id);
 
 const startBtn = $("startBtn");
@@ -103,6 +103,7 @@ stopBtn.addEventListener("click", (e) => {
 });
 
 // ---------- Slider mappings ----------
+
 master.addEventListener("input", () => {
   masterLevel = parseFloat(master.value);
   masterVal.textContent = masterLevel.toFixed(2);
@@ -144,11 +145,11 @@ document.addEventListener("mousemove", (e) => {
   const cutoff = 200 + xNorm * cutoffMax;
   filter.frequency.rampTo(cutoff, 0.08);
 
-  // Y: reverb wetness (inverted) - if you want, keep slider as max depth
+  // Y: reverb (inverted)
   const wetTarget = 0.05 + (1 - yNorm) * 0.75;
   reverb.wet.rampTo(wetTarget, 0.08);
 
-  // Bonus: tiny pitch drift (subtle, not a full instrument yet)
+  // Tiny pitch drift (subtle, not a full instrument yet)
   const freq = 90 + (1 - yNorm) * 220; // 90..310
   synth.frequency.rampTo(freq, 0.08);
   synth2.frequency.rampTo(freq * 1.5, 0.08);
