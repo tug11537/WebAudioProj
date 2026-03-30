@@ -18,6 +18,7 @@ function initThree() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
+  // Three.js sphere geometry
   const geometry = new THREE.SphereGeometry(1, 32, 32);
   const material = new THREE.MeshBasicMaterial({ wireframe: true });
   sphere = new THREE.Mesh(geometry, material);
@@ -78,7 +79,7 @@ const lfo = new Tone.LFO({
   max: 150,
 });
 
-// Connect chain
+// chain
 synth.connect(filter);
 synth2.chain(synth2Gain, filter);
 filter.chain(reverb, delay, panner, gain, Tone.Destination);
@@ -135,7 +136,7 @@ const lfoVal = $("lfoVal");
 let cutoffMax = parseFloat(cutoffRange.value);
 let masterLevel = parseFloat(master.value);
 
-// ---------- Start / Stop ----------
+// ---------- Start/ Stop ----------
 async function startAudio() {
   await Tone.start();
 
@@ -213,7 +214,7 @@ cutoffRange.dispatchEvent(new Event("input"));
 wet.dispatchEvent(new Event("input"));
 lfoRate.dispatchEvent(new Event("input"));
 
-// ---------- Gesture mapping ----------
+// ---------- Mouse mapping ----------
 document.addEventListener("mousemove", (e) => {
   if (!started) return;
 

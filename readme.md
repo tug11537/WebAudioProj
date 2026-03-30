@@ -20,6 +20,7 @@ Move your mouse across the screen to explore timbral space:
 ## Technologies Used
 
 - Tone.js
+- Three.js
 - Web Audio API
 - HTML / CSS / JavaScript
 
