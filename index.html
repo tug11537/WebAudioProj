@@ -2,46 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sound Space</title>
-    <style>
-      body {
-        margin: 0;
-        background: #84aec6;
-        color: #0d0202ae;
-        font-family: "papyrus", sans-serif;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        text-align: center;
-        cursor: crosshair;
-      }
-      #hint {
-        opacity: 0.7;
-        font-size: 0.9rem;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sound Drift</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div>
+    <div id="app">
       <h1>Sound Drift</h1>
-      <p id="hint">Click to begin · Move mouse to shape sound!</p>
-      <div
-        id="controls"
-        style="
-          margin-top: 16px;
-          display: grid;
-          gap: 10px;
-          width: min(520px, 92vw);
-        "
-      >
-        <div style="display: flex; gap: 10px; justify-content: center">
+      <p id="hint">Click Start · Move mouse to shape sound!</p>
+
+      <div id="controls">
+        <div class="button-row">
           <button id="startBtn">Start</button>
           <button id="stopBtn" disabled>Stop</button>
         </div>
 
-        <label
-          >Master <span id="masterVal">0.40</span>
+        <label>
+          Master <span id="masterVal">0.40</span>
           <input
             id="master"
             type="range"
@@ -52,8 +29,8 @@
           />
         </label>
 
-        <label
-          >Cutoff Range <span id="cutoffVal">3000</span> Hz
+        <label>
+          Cutoff Range <span id="cutoffVal">3000</span> Hz
           <input
             id="cutoffRange"
             type="range"
@@ -64,8 +41,8 @@
           />
         </label>
 
-        <label
-          >Reverb <span id="wetVal">0.30</span>
+        <label>
+          Reverb <span id="wetVal">0.30</span>
           <input
             id="wet"
             type="range"
@@ -76,8 +53,8 @@
           />
         </label>
 
-        <label
-          >(LFO) <span id="lfoVal">0.08</span> Hz
+        <label>
+          LFO Rate <span id="lfoVal">0.08</span> Hz
           <input
             id="lfoRate"
             type="range"
@@ -91,6 +68,7 @@
     </div>
 
     <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

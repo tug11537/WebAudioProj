@@ -1,0 +1,47 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  background: #84aec6;
+  color: #0d0202ae;
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  cursor: crosshair;
+}
+
+/* App container stays above visuals */
+#app {
+  position: relative;
+  z-index: 2;
+}
+
+/* Controls */
+#controls {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+  width: min(520px, 92vw);
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Hint text */
+#hint {
+  opacity: 0.7;
+  font-size: 0.9rem;
+}
+
+/* Three.js canvas layer */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
