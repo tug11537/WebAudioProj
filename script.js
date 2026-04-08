@@ -23,6 +23,7 @@ function initThree() {
   const material = new THREE.MeshBasicMaterial({ wireframe: true });
   sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
+  console.log(geometry);
 
   animateThree();
 }
