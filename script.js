@@ -18,25 +18,11 @@ function initThree() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // Three.js sphere geometry
   const geometry = new THREE.SphereGeometry(1, 32, 32);
   const material = new THREE.MeshBasicMaterial({ wireframe: true });
   sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
-  console.log(geometry);
-
-  animateThree();
-}
-
-function animateThree() {
-  requestAnimationFrame(animateThree);
-
-  if (sphere) {
-    sphere.rotation.x += 0.005;
-    sphere.rotation.y += 0.008;
-  }
-
-  renderer.render(scene, camera);
+  animate();
 }
 
 // ---------- Sound chain ----------
@@ -52,6 +38,13 @@ const synth2 = new Tone.Oscillator({
 
 const synth2Gain = new Tone.Gain(0.12);
 const panner = new Tone.Panner(0);
+
+const ampEnv = new Tone.AmplitudeEnvelope({
+  attack: 0.05,
+  decay: 0.2,
+  sustain: 0.5,
+  release: 0.6,
+});
 
 const filter = new Tone.Filter({
   type: "lowpass",
@@ -73,19 +66,62 @@ const delay = new Tone.FeedbackDelay({
 
 const gain = new Tone.Gain(0.0001);
 
-// LFO for slow motion / breathing
 const lfo = new Tone.LFO({
   frequency: 0.08,
   min: -150,
   max: 150,
 });
 
+const filterEnv = new Tone.Envelope({
+  attack: 0.02,
+  decay: 0.15,
+  sustain: 0.3,
+  release: 0.4,
+});
+
+window.addEventListener("mousedown", async () => {
+  await startAudio();
+  ampEnv.triggerAttack();
+  filterEnv.triggerAttack();
+});
+
+window.addEventListener("mouseup", () => {
+  ampEnv.triggerRelease();
+  filterEnv.triggerRelease();
+});
+const fft = new Tone.FFT(64);
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const spectrum = fft.getValue(); // Float32Array
+  let energy = 0;
+
+  for (let i = 0; i < spectrum.length; i++) {
+    energy += spectrum[i];
+  }
+
+  energy /= spectrum.length;
+
+  const normalized = Math.max(0, (energy + 100) / 100);
+
+  // visual mapping
+  if (sphere) {
+    sphere.scale.setScalar(1 + normalized * 1.5);
+  }
+  if (renderer && scene && camera) {
+    renderer.render(scene, camera);
+  }
+}
+
 // chain
 synth.connect(filter);
 synth2.chain(synth2Gain, filter);
-filter.chain(reverb, delay, panner, gain, Tone.Destination);
 
-// LFO into filter frequency
+filter.chain(reverb, delay, panner, gain, ampEnv, Tone.Destination);
+ampEnv.connect(fft);
+
+filterEnv.connect(filter.frequency);
 lfo.connect(filter.frequency);
 
 // ---------- Zones ----------
@@ -229,7 +265,6 @@ document.addEventListener("mousemove", (e) => {
   if (sphere) {
     sphere.rotation.x = yNorm * Math.PI;
     sphere.rotation.y = xNorm * Math.PI * 2;
-    sphere.scale.setScalar(1 + (1 - yNorm) * 0.7);
   }
 
   if (activeZone) {
@@ -245,9 +280,6 @@ document.addEventListener("mousemove", (e) => {
   const g = Math.floor(120 + yNorm * 70);
   const b = Math.floor(140 + (1 - xNorm) * 60);
   document.body.style.background = `rgb(${r}, ${g}, ${b})`;
-
-  const scale = 1 + (1 - yNorm) * 0.8;
-  const blur = xNorm * 6;
 
   const cutoff = 200 + xNorm * cutoffMax;
   filter.frequency.rampTo(cutoff, 0.08);
