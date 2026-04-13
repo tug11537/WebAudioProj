@@ -1,6 +1,7 @@
 let started = false;
 let audioInitialized = false;
 let scene, camera, renderer, sphere;
+let smoothedEnergy = 0;
 
 // ---------- Three.js ----------
 function initThree() {
@@ -94,21 +95,29 @@ const fft = new Tone.FFT(64);
 function animate() {
   requestAnimationFrame(animate);
 
-  const spectrum = fft.getValue(); // Float32Array
-  let energy = 0;
+  const spectrum = fft.getValue();
+  let maxEnergy = -100;
 
   for (let i = 0; i < spectrum.length; i++) {
-    energy += spectrum[i];
+    if (spectrum[i] > maxEnergy) {
+      maxEnergy = spectrum[i];
+    }
   }
 
-  energy /= spectrum.length;
+  const normalized = Math.max(0, (maxEnergy + 100) / 100);
 
-  const normalized = Math.max(0, (energy + 100) / 100);
+  // FFT response
+  smoothedEnergy += (normalized - smoothedEnergy) * 0.15;
 
-  // visual mapping
   if (sphere) {
-    sphere.scale.setScalar(1 + normalized * 1.5);
+    sphere.scale.setScalar(1 + smoothedEnergy * 0.5);
+
+    // wobble
+    const time = performance.now() * 0.001;
+    sphere.position.x = Math.sin(time * 0.7) * 0.02;
+    sphere.position.y = Math.cos(time * 0.5) * 0.02;
   }
+
   if (renderer && scene && camera) {
     renderer.render(scene, camera);
   }
