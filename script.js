@@ -67,13 +67,6 @@ const synth2 = new Tone.Oscillator({
 const synth2Gain = new Tone.Gain(0.12);
 const panner = new Tone.Panner(0);
 
-const ampEnv = new Tone.AmplitudeEnvelope({
-  attack: 0.05,
-  decay: 0.2,
-  sustain: 0.5,
-  release: 0.6,
-});
-
 const filter = new Tone.Filter({
   type: "lowpass",
   frequency: 800,
@@ -92,7 +85,7 @@ const delay = new Tone.FeedbackDelay({
   wet: 0,
 });
 
-const gain = new Tone.Gain(0.0001);
+const gain = new Tone.Gain(0.001);
 
 const lfo = new Tone.LFO({
   frequency: 0.08,
@@ -100,23 +93,13 @@ const lfo = new Tone.LFO({
   max: 150,
 });
 
-const filterEnv = new Tone.Envelope({
+/*const filterEnv = new Tone.Envelope({
   attack: 0.02,
   decay: 0.15,
   sustain: 0.3,
   release: 0.4,
-});
+}); */
 
-window.addEventListener("mousedown", async () => {
-  await startAudio();
-  ampEnv.triggerAttack();
-  filterEnv.triggerAttack();
-});
-
-window.addEventListener("mouseup", () => {
-  ampEnv.triggerRelease();
-  filterEnv.triggerRelease();
-});
 const fft = new Tone.FFT(64);
 
 function animate() {
@@ -170,8 +153,8 @@ function animate() {
 synth.connect(filter);
 synth2.chain(synth2Gain, filter);
 
-filter.chain(reverb, delay, panner, gain, ampEnv, Tone.Destination);
-ampEnv.connect(fft);
+filter.chain(reverb, delay, panner, gain, Tone.Destination);
+gain.connect(fft);
 
 filterEnv.connect(filter.frequency);
 lfo.connect(filter.frequency);
@@ -336,7 +319,7 @@ document.addEventListener("mousemove", (e) => {
   const b = Math.floor(140 + (1 - xNorm) * 60);
   document.body.style.background = `rgb(${r}, ${g}, ${b})`;
 
-  const cutoff = 200 + xNorm * cutoffMax;
+  const cutoff = 400 + xNorm * cutoffMax;
   filter.frequency.rampTo(cutoff, 0.08);
 
   const wetTarget = 0.05 + (1 - yNorm) * 0.75;
