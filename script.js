@@ -2,6 +2,9 @@ let started = false;
 let audioInitialized = false;
 let scene, camera, renderer, sphere;
 let smoothedEnergy = 0;
+let particles, particlePositions;
+let mouseXNorm = 0.5;
+let mouseYNorm = 0.5;
 
 // ---------- Three.js ----------
 function initThree() {
@@ -23,6 +26,30 @@ function initThree() {
   const material = new THREE.MeshBasicMaterial({ wireframe: true });
   sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
+  const particleCount = 400;
+  const positions = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 12; // x
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 8; // y
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 10; // z
+  }
+
+  const particleGeometry = new THREE.BufferGeometry();
+  particleGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(positions, 3)
+  );
+
+  const particleMaterial = new THREE.PointsMaterial({
+    size: 0.03,
+    transparent: true,
+    opacity: 0.6,
+  });
+
+  particles = new THREE.Points(particleGeometry, particleMaterial);
+  particlePositions = particleGeometry.attributes.position.array;
+  scene.add(particles);
   animate();
 }
 
@@ -117,7 +144,23 @@ function animate() {
     sphere.position.x = Math.sin(time * 0.7) * 0.02;
     sphere.position.y = Math.cos(time * 0.5) * 0.02;
   }
+  if (particles) {
+    const time = performance.now() * 0.0002;
 
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0003;
+
+    // slight audio reactivity
+    particles.material.opacity = 0.35 + smoothedEnergy * 0.4;
+
+    // subtle parallax from mouse
+    particles.position.x +=
+      ((mouseXNorm - 0.5) * 0.4 - particles.position.x) * 0.03;
+    particles.position.y +=
+      (-(mouseYNorm - 0.5) * 0.25 - particles.position.y) * 0.03;
+  }
   if (renderer && scene && camera) {
     renderer.render(scene, camera);
   }
@@ -266,6 +309,9 @@ document.addEventListener("mousemove", (e) => {
 
   const xNorm = e.clientX / window.innerWidth;
   const yNorm = e.clientY / window.innerHeight;
+
+  mouseXNorm = xNorm;
+  mouseYNorm = yNorm;
 
   const activeZone = zones.find(
     (zone) => xNorm >= zone.minX && xNorm < zone.maxX
