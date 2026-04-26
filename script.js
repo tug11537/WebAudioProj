@@ -55,7 +55,7 @@ function initThree() {
 
 // ---------- Sound chain ----------
 const synth = new Tone.Oscillator({
-  type: "sawtooth",
+  type: "square",
   frequency: 110,
 });
 
@@ -85,20 +85,18 @@ const delay = new Tone.FeedbackDelay({
   wet: 0,
 });
 
-const gain = new Tone.Gain(0.001);
+const gain = new Tone.Gain(0.01);
 
 const lfo = new Tone.LFO({
-  frequency: 0.08,
-  min: -150,
-  max: 150,
+  frequency: 0.5,
 });
 
-/*const filterEnv = new Tone.Envelope({
+const filterEnv = new Tone.Envelope({
   attack: 0.02,
   decay: 0.15,
   sustain: 0.3,
   release: 0.4,
-}); */
+});
 
 const fft = new Tone.FFT(64);
 
@@ -114,7 +112,7 @@ function animate() {
     }
   }
 
-  const normalized = Math.max(0, (maxEnergy + 100) / 100);
+  const normalized = Math.min(1, Math.max(0, (maxEnergy + 100) / 100));
 
   // FFT response
   smoothedEnergy += (normalized - smoothedEnergy) * 0.15;
@@ -156,8 +154,8 @@ synth2.chain(synth2Gain, filter);
 filter.chain(reverb, delay, panner, gain, Tone.Destination);
 gain.connect(fft);
 
-filterEnv.connect(filter.frequency);
-lfo.connect(filter.frequency);
+//filterEnv.connect(filter.frequency);
+//lfo.connect(filter.frequency);
 
 // ---------- Zones ----------
 const zones = [
@@ -320,12 +318,16 @@ document.addEventListener("mousemove", (e) => {
   document.body.style.background = `rgb(${r}, ${g}, ${b})`;
 
   const cutoff = 400 + xNorm * cutoffMax;
-  filter.frequency.rampTo(cutoff, 0.08);
+  // filter.frequency.value = cutoff;
+  lfo.min = cutoff - 150;
+  lfo.max = cutoff + 1500;
+  // console.log(cutoff);
 
   const wetTarget = 0.05 + (1 - yNorm) * 0.75;
   reverb.wet.rampTo(wetTarget, 0.08);
 
   const freq = 90 + (1 - yNorm) * 220;
+  console.log(freq, cutoff);
   synth.frequency.rampTo(freq, 0.08);
   synth2.frequency.rampTo(freq * 1.5, 0.08);
 });
