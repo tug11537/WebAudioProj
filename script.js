@@ -202,7 +202,7 @@ const zones = [
     maxX: 0.33,
     q: 3,
     delayWet: 0.05,
-    hint: "Zone 1: low drift",
+    hint: "Zone 1: drift",
   },
   {
     name: "bloom",
@@ -210,7 +210,7 @@ const zones = [
     maxX: 0.66,
     q: 5,
     delayWet: 0.2,
-    hint: "Zone 2: dream bloom",
+    hint: "Zone 2: bloom",
   },
   {
     name: "air",
@@ -218,7 +218,7 @@ const zones = [
     maxX: 1,
     q: 7,
     delayWet: 0.28,
-    hint: "Zone 3: sharp air",
+    hint: "Zone 3: air",
   },
 ];
 

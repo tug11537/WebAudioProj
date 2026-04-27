@@ -30,60 +30,53 @@
         <span>Bloom</span>
         <span>Air</span>
       </div>
-      <div id="controls">
-        <div class="button-row">
-          <button id="startBtn">Start</button>
-          <button id="stopBtn" disabled>Stop</button>
-        </div>
-
-        <label>
-          Master <span id="masterVal">0.40</span>
-          <input
-            id="master"
-            type="range"
-            min="0"
-            max="0.9"
-            step="0.01"
-            value="0.40"
-          />
-        </label>
-
-        <label>
-          Cutoff Range <span id="cutoffVal">3000</span> Hz
-          <input
-            id="cutoffRange"
-            type="range"
-            min="500"
-            max="6000"
-            step="10"
-            value="3000"
-          />
-        </label>
-
-        <label>
-          Reverb <span id="wetVal">0.30</span>
-          <input
-            id="wet"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value="0.30"
-          />
-        </label>
-
-        <label>
-          LFO Rate <span id="lfoVal">0.08</span> Hz
-          <input
-            id="lfoRate"
-            type="range"
-            min="0"
-            max="2"
-            step="0.01"
-            value="0.08"
-          />
-        </label>
+    </div>
+    <div id="controls">
+      <div class="button-row">
+        <button id="startBtn">Start</button>
+        <button id="stopBtn" disabled>Stop</button>
       </div>
+
+      <label>
+        Master <span id="masterVal">0.40</span>
+        <input
+          id="master"
+          type="range"
+          min="0"
+          max="0.9"
+          step="0.01"
+          value="0.40"
+        />
+      </label>
+
+      <label>
+        Cutoff Range <span id="cutoffVal">3000</span> Hz
+        <input
+          id="cutoffRange"
+          type="range"
+          min="500"
+          max="6000"
+          step="10"
+          value="3000"
+        />
+      </label>
+
+      <label>
+        Reverb <span id="wetVal">0.30</span>
+        <input id="wet" type="range" min="0" max="1" step="0.01" value="0.30" />
+      </label>
+
+      <label>
+        LFO Rate <span id="lfoVal">0.08</span> Hz
+        <input
+          id="lfoRate"
+          type="range"
+          min="0"
+          max="2"
+          step="0.01"
+          value="0.08"
+        />
+      </label>
     </div>
 
     <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
