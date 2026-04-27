@@ -5,12 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sound Drift</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
+    <div id="zone1" class="zoneOverlay"></div>
+    <div id="zone2" class="zoneOverlay"></div>
+    <div id="zone3" class="zoneOverlay"></div>
     <div id="app">
       <h1>Sound Drift</h1>
-      <p id="hint">Click Start · Move mouse to shape sound!</p>
-
+      <p id="description">
+        An interactive audio-visual space where mouse movement controls sound,
+        filter motion, spatialization, and reactive visuals.
+      </p>
+      <p id="instructions">
+        Move the mouse to explore pitch, space and timbre.
+      </p>
+      <p id="hint">Click Start!</p>
+      <button id="hideBtn">Hide Controls</button>
+      <div id="zoneLabels">
+        <span>Drift</span>
+        <span>Bloom</span>
+        <span>Air</span>
+      </div>
       <div id="controls">
         <div class="button-row">
           <button id="startBtn">Start</button>
